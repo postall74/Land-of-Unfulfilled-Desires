@@ -9,17 +9,20 @@ public class Player : MonoBehaviour
     private Rigidbody2D _rb;
     private Animator _animator;
     private float _xInput;
+    private int _faceDirection = 1;
+    private bool _faceRight = true;
 
     private void Start()
     {
-        _rb= GetComponent<Rigidbody2D>();
-        _animator= GetComponentInChildren<Animator>();
+        _rb = GetComponent<Rigidbody2D>();
+        _animator = GetComponentInChildren<Animator>();
     }
 
     private void Update()
     {
         Movement();
         CheckInput();
+        FlipController();
         AnimatorController();
     }
 
@@ -43,7 +46,19 @@ public class Player : MonoBehaviour
 
     private void AnimatorController()
     {
-       bool _isMoving = _rb.velocity.x != 0;
+        bool _isMoving = _rb.velocity.x != 0;
         _animator.SetBool("isMoving", _isMoving);
+    }
+
+    private void Flip()
+    {
+        _faceDirection *= -1;
+        _faceRight = !_faceRight;
+        transform.Rotate(0, 180, 0);
+    }
+
+    private void FlipController()
+    {
+        if ((_rb.velocity.x > 0 && !_faceRight) || (_rb.velocity.x < 0 && _faceRight)) Flip();
     }
 }
