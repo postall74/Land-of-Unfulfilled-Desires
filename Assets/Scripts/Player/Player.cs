@@ -61,8 +61,10 @@ public class Player : MonoBehaviour
 
     private void AnimatorController()
     {
-        bool _isMoving = _rb.velocity.x != 0;
-        _animator.SetBool("isMoving", _isMoving);
+        bool isMoving = _rb.velocity.x != 0;
+        _animator.SetFloat("yVelocity", _rb.velocity.y);
+        _animator.SetBool("isMoving", isMoving);
+        _animator.SetBool("isGrounded", _isGround);
     }
 
     private void Flip()
