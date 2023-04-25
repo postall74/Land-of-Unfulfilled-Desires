@@ -218,6 +218,7 @@ GameObject:
   - component: {fileID: 618051756}
   - component: {fileID: 618051757}
   - component: {fileID: 618051758}
+  - component: {fileID: 618051759}
   m_Layer: 0
   m_Name: Animator
   m_TagString: Untagged
@@ -312,6 +313,18 @@ Animator:
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorControllerStateOnDisable: 0
+--- !u!114 &618051759
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 618051755}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4b94c6afd0316cf4cb3b5f425092aaca, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1416335238
 GameObject:
   m_ObjectHideFlags: 0
@@ -360,7 +373,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1416335238}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -2.983, y: -2.388, z: 0}
+  m_LocalPosition: {x: -18.957, y: -5.796, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -398,6 +411,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _moveSpeed: 7
   _jumpForce: 12
+  _isAttack: 0
+  _comboCounter: 0
   _dashSpeed: 15
   _dashDuration: 0.25
   _dashTime: 0

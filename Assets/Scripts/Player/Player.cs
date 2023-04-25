@@ -11,6 +11,9 @@ public class Player : MonoBehaviour
 
     [SerializeField] private float _moveSpeed;
     [SerializeField] private float _jumpForce;
+    [Header("Attack info")]
+    [SerializeField] private bool _isAttack;
+    [SerializeField] private int _comboCounter;
     [Header("Dash info")]
     [SerializeField] private float _dashSpeed;
     [SerializeField] private float _dashDuration;
@@ -18,6 +21,9 @@ public class Player : MonoBehaviour
     [Header("Collision info")]
     [SerializeField] private float _groundCheckDistance;
     [SerializeField] private LayerMask _ground;
+
+    public void AttackOver() =>
+        _isAttack = false;
 
     private void Start()
     {
@@ -49,6 +55,9 @@ public class Player : MonoBehaviour
     {
         _xInput = Input.GetAxisRaw("Horizontal");
 
+        if (Input.GetKeyDown(KeyCode.Mouse0))
+            _isAttack = true;
+
         if (Input.GetKeyDown(KeyCode.Space))
             Jump();
     }
@@ -79,6 +88,8 @@ public class Player : MonoBehaviour
         _animator.SetBool("isMoving", isMoving);
         _animator.SetBool("isGrounded", _isGround);
         _animator.SetBool("isDashing", _dashTime > 0);
+        _animator.SetBool("isAttacking", _isAttack);
+        _animator.SetInteger("comboCounter", _comboCounter);
     }
 
     private void Flip()
