@@ -409,13 +409,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cda475b4d51e1894da471ea0d0a9ae66, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _comboTime: 0.3
   _moveSpeed: 7
   _jumpForce: 12
-  _isAttack: 0
-  _comboCounter: 0
   _dashSpeed: 15
   _dashDuration: 0.25
-  _dashTime: 0
+  _dashCooldown: 3
   _groundCheckDistance: 1.05
   _ground:
     serializedVersion: 2
