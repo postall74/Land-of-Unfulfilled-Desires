@@ -325,6 +325,37 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4b94c6afd0316cf4cb3b5f425092aaca, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!1 &1026949894
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1026949895}
+  m_Layer: 0
+  m_Name: GroundCheck
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1026949895
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1026949894}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -0.045, y: -1.04, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1416335241}
+  m_RootOrder: 1
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1416335238
 GameObject:
   m_ObjectHideFlags: 0
@@ -378,6 +409,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 618051756}
+  - {fileID: 1026949895}
   m_Father: {fileID: 0}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -409,16 +441,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cda475b4d51e1894da471ea0d0a9ae66, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _groundCheck: {fileID: 1026949895}
+  _groundCheckDistance: 0.1
+  _ground:
+    serializedVersion: 2
+    m_Bits: 64
   _comboTime: 0.3
   _moveSpeed: 7
   _jumpForce: 12
   _dashSpeed: 15
   _dashDuration: 0.25
   _dashCooldown: 3
-  _groundCheckDistance: 1.05
-  _ground:
-    serializedVersion: 2
-    m_Bits: 64
 --- !u!1 &1902733526
 GameObject:
   m_ObjectHideFlags: 0

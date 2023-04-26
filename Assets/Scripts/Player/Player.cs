@@ -1,7 +1,7 @@
 using UnityEngine;
 
 [RequireComponent(typeof(Rigidbody2D))]
-public class Player : MonoBehaviour
+public class Player : Entity
 {
     [Header("Attack info")]
     [SerializeField] private float _comboTime = .3f;
@@ -17,16 +17,8 @@ public class Player : MonoBehaviour
     [SerializeField] private float _dashCooldown;
     private float _dashTime;
     private float _dashCooldownTimer;
-    [Header("Collision info")]
-    [SerializeField] private float _groundCheckDistance;
-    [SerializeField] private LayerMask _ground;
 
-    private Rigidbody2D _rb;
-    private Animator _animator;
     private float _xInput;
-    private bool _faceRight = true;
-    private float _faceDirection = 1;
-    private bool _isGround;
 
     public void AttackOver()
     {
@@ -35,32 +27,25 @@ public class Player : MonoBehaviour
 
         if (_comboCounter > 2)
             _comboCounter = 0;
-
     }
 
-    private void Start()
+    protected override void Start()
     {
-        _rb = GetComponent<Rigidbody2D>();
-        _animator = GetComponentInChildren<Animator>();
+        base.Start();
     }
 
-    private void Update()
+    protected override void Update()
     {
+        base.Update();
         Movement();
         CheckInput();
-        CollisionChecks();
-
+        
         _dashTime -= Time.deltaTime;
         _dashCooldownTimer -= Time.deltaTime;
         _comboTimeWindow -= Time.deltaTime;
 
         FlipController();
         AnimatorController();
-    }
-
-    private void OnDrawGizmos()
-    {
-        Gizmos.DrawLine(transform.position, new Vector3(transform.position.x, transform.position.y - _groundCheckDistance));
     }
 
     private void CheckInput()
@@ -116,11 +101,6 @@ public class Player : MonoBehaviour
             _rb.velocity = new Vector2(_rb.velocity.x, _jumpForce);
     }
 
-    private void CollisionChecks()
-    {
-        _isGround = Physics2D.Raycast(transform.position, Vector2.down, _groundCheckDistance, _ground);
-    }
-
     private void AnimatorController()
     {
         bool isMoving = _rb.velocity.x != 0;
@@ -130,13 +110,6 @@ public class Player : MonoBehaviour
         _animator.SetBool("isDashing", _dashTime > 0);
         _animator.SetBool("isAttacking", _isAttacking);
         _animator.SetInteger("comboCounter", _comboCounter);
-    }
-
-    private void Flip()
-    {
-        _faceDirection *= -1;
-        _faceRight = !_faceRight;
-        transform.Rotate(0, 180, 0);
     }
 
     private void FlipController()

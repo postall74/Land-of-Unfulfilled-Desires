@@ -11,11 +11,6 @@ public class PlayerAnimEvents : MonoBehaviour
         _player = GetComponentInParent<Player>();
     }
 
-    private void Update()
-    {
-        
-    }
-
     private void AnimationTrigger()
     {
         _player.AttackOver();
