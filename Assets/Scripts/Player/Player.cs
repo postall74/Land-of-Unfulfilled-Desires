@@ -7,9 +7,11 @@ public class Player : MonoBehaviour
 {
     [Header("Move info")]
     [SerializeField] private float _moveSpeed;
+    [SerializeField] private float _jumpForce;
 
     #region Properties
     public float MoveSpeed => _moveSpeed;
+    public float JumpForce => _jumpForce;
     #endregion
 
     #region Component
@@ -21,6 +23,8 @@ public class Player : MonoBehaviour
     public PlayerStateMachine StateMachine { get; private set; }
     public PlayerIdleState IdleState { get; private set; }
     public PlayerMoveState MoveState { get; private set; }
+    public PlayerJumpState JumpState { get; private set; }
+    public PlayerAirState AirState { get; private set; }
     #endregion
 
     public void SetVelocity(float _xVelocity, float _yVelocity)
@@ -33,6 +37,8 @@ public class Player : MonoBehaviour
         StateMachine = new PlayerStateMachine();
         IdleState = new PlayerIdleState(this, StateMachine, "Idle");
         MoveState = new PlayerMoveState(this, StateMachine, "Move");
+        JumpState = new PlayerJumpState(this, StateMachine, "Jump");
+        AirState = new PlayerAirState(this, StateMachine, "Jump");
     }
 
     private void Start()

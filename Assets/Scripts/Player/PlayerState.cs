@@ -27,6 +27,7 @@ public class PlayerState
     public virtual void Update() 
     {
         xInput = Input.GetAxisRaw("Horizontal");
+        player.Animator.SetFloat("yVelocity", rigidbody.velocity.y);
     }
 
     public virtual void Exit()
