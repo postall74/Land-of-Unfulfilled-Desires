@@ -17,9 +17,12 @@ public class Player : MonoBehaviour
     [Space]
     [SerializeField] private LayerMask _groundLayer;
 
+    private bool _isFacingRight = true;
+
     #region Properties
     public float MoveSpeed => _moveSpeed;
     public float JumpForce => _jumpForce;
+    public int _facingDirection { get; private set; } = 1;
     #endregion
 
     #region Component
@@ -38,9 +41,25 @@ public class Player : MonoBehaviour
     public void SetVelocity(float _xVelocity, float _yVelocity)
     {
         Rigidbody.velocity = new Vector2(_xVelocity, _yVelocity);
+        FlipController(_xVelocity);
     }
 
     public bool IsGroundDetected() => Physics2D.Raycast(_groundCheck.position, Vector2.down, _groundCheckDistance, _groundLayer);
+
+    public void Flip()
+    {
+        _facingDirection *= -1;
+        _isFacingRight = !_isFacingRight;
+        transform.Rotate(0, 180, 0);
+    }
+
+    public void FlipController(float x)
+    {
+        if (x > 0 && !_isFacingRight)
+            Flip();
+        else if (x < 0 && _isFacingRight)
+            Flip();
+    }
 
     private void Awake()
     {
