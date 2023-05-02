@@ -8,24 +8,31 @@ public class Player : MonoBehaviour
     [Header("Move info")]
     [SerializeField] private float _moveSpeed;
     [SerializeField] private float _jumpForce;
+
+    [Header("Dash info")]
+    [SerializeField] private float _dashCooldown;
     [SerializeField] private float _dashSpeed;
     [SerializeField] private float _dashDuration;
 
     [Header("Collision info")]
     [SerializeField] private Transform _groundCheck;
     [SerializeField] private float _groundCheckDistance;
+    [Space]
     [SerializeField] private Transform _wallCheck;
     [SerializeField] private float _wallCheckDistance;
     [Space]
     [SerializeField] private LayerMask _groundLayer;
 
     private bool _isFacingRight = true;
+    private float _dashDirection;
+    private float _dashUsageTimer;
 
     #region Properties
     public float MoveSpeed => _moveSpeed;
     public float JumpForce => _jumpForce;
     public float DashDuration => _dashDuration;
     public float DashSpeed => _dashSpeed;
+    public float DashDir => _dashDirection;
     public int FacingDirection { get; private set; } = 1;
     #endregion
 
@@ -86,11 +93,28 @@ public class Player : MonoBehaviour
     private void Update()
     {
         StateMachine.CurrentState.Update();
+        CheckForDashInput();
     }
 
     private void OnDrawGizmos()
     {
         Gizmos.DrawLine(_groundCheck.position, new Vector3(_groundCheck.position.x, _groundCheck.position.y - _groundCheckDistance));
         Gizmos.DrawLine(_wallCheck.position, new Vector3(_wallCheck.position.x + _wallCheckDistance, _wallCheck.position.y));
+    }
+
+    private void CheckForDashInput()
+    {
+        _dashUsageTimer -= Time.deltaTime;
+
+        if (Input.GetKeyDown(KeyCode.LeftShift) && _dashUsageTimer < 0)
+        {
+            _dashUsageTimer = _dashCooldown;
+            _dashDirection = Input.GetAxisRaw("Horizontal");
+
+            if (_dashDirection == 0)
+                _dashDirection = FacingDirection;
+
+            StateMachine.ChangeState(DashState);
+        }
     }
 }
