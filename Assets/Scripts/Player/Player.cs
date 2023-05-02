@@ -9,6 +9,7 @@ public class Player : MonoBehaviour
     [Header("Move info")]
     [SerializeField] private float _moveSpeed;
     [SerializeField] private float _jumpForce;
+    [SerializeField] private float _wallJumpForce;
     [SerializeField] private float _slidCoefficient;
 
     [Header("Dash info")]
@@ -32,6 +33,7 @@ public class Player : MonoBehaviour
     #region Properties
     public float MoveSpeed => _moveSpeed;
     public float JumpForce => _jumpForce;
+    public float WallJumpForce => _wallJumpForce;
     public float SlidCoefficient => _slidCoefficient;
     public float DashDuration => _dashDuration;
     public float DashSpeed => _dashSpeed;
@@ -50,6 +52,7 @@ public class Player : MonoBehaviour
     public PlayerMoveState MoveState { get; private set; }
     public PlayerJumpState JumpState { get; private set; }
     public PlayerAirState AirState { get; private set; }
+    public PlayerWallJumpState WallJumpState { get; private set; }
     public PlayerWallSlideState WallSlideState { get; private set; }
     public PlayerDashState DashState { get; private set; }
     #endregion
@@ -86,6 +89,7 @@ public class Player : MonoBehaviour
         MoveState = new PlayerMoveState(this, StateMachine, "Move");
         JumpState = new PlayerJumpState(this, StateMachine, "Jump");
         AirState = new PlayerAirState(this, StateMachine, "Jump");
+        WallJumpState = new PlayerWallJumpState(this, StateMachine, "Jump");
         WallSlideState = new PlayerWallSlideState(this, StateMachine, "WallSlide");
         DashState = new PlayerDashState(this, StateMachine, "Dash");
     }
@@ -111,6 +115,9 @@ public class Player : MonoBehaviour
 
     private void CheckForDashInput()
     {
+        if(IsWallDetected()) 
+            return;
+
         _dashUsageTimer -= Time.deltaTime;
 
         if (Input.GetKeyDown(KeyCode.LeftShift) && _dashUsageTimer < 0)

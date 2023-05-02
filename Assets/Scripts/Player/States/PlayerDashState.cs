@@ -27,6 +27,9 @@ public class PlayerDashState : PlayerState
     {
         base.Update();
 
+        if(!player.IsGroundDetected() && player.IsWallDetected() ) 
+            stateMachine.ChangeState(player.WallSlideState);
+
         player.SetVelocity(player.DashSpeed * player.DashDir, 0);
 
         if (stateTimer < 0)
