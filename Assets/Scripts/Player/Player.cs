@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using UnityEditor.Tilemaps;
 using UnityEngine;
 
 [RequireComponent(typeof(Rigidbody2D))]
@@ -8,6 +9,7 @@ public class Player : MonoBehaviour
     [Header("Move info")]
     [SerializeField] private float _moveSpeed;
     [SerializeField] private float _jumpForce;
+    [SerializeField] private float _slidCoefficient;
 
     [Header("Dash info")]
     [SerializeField] private float _dashCooldown;
@@ -30,6 +32,7 @@ public class Player : MonoBehaviour
     #region Properties
     public float MoveSpeed => _moveSpeed;
     public float JumpForce => _jumpForce;
+    public float SlidCoefficient => _slidCoefficient;
     public float DashDuration => _dashDuration;
     public float DashSpeed => _dashSpeed;
     public float DashDir => _dashDirection;
@@ -47,6 +50,7 @@ public class Player : MonoBehaviour
     public PlayerMoveState MoveState { get; private set; }
     public PlayerJumpState JumpState { get; private set; }
     public PlayerAirState AirState { get; private set; }
+    public PlayerWallSlideState WallSlideState { get; private set; }
     public PlayerDashState DashState { get; private set; }
     #endregion
 
@@ -57,6 +61,8 @@ public class Player : MonoBehaviour
     }
 
     public bool IsGroundDetected() => Physics2D.Raycast(_groundCheck.position, Vector2.down, _groundCheckDistance, _groundLayer);
+
+    public bool IsWallDetected() => Physics2D.Raycast(_wallCheck.position, Vector2.right * FacingDirection, _wallCheckDistance, _groundLayer);
 
     public void Flip()
     {
@@ -80,6 +86,7 @@ public class Player : MonoBehaviour
         MoveState = new PlayerMoveState(this, StateMachine, "Move");
         JumpState = new PlayerJumpState(this, StateMachine, "Jump");
         AirState = new PlayerAirState(this, StateMachine, "Jump");
+        WallSlideState = new PlayerWallSlideState(this, StateMachine, "WallSlide");
         DashState = new PlayerDashState(this, StateMachine, "Dash");
     }
 

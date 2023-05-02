@@ -25,8 +25,6 @@ public class PlayerJumpState : PlayerState
         base.Update();
 
         if (rigidbody.velocity.y < 0)
-        {
             stateMachine.ChangeState(player.AirState);
-        }
     }
 }
