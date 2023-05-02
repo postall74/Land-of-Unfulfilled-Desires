@@ -8,6 +8,8 @@ public class Player : MonoBehaviour
     [Header("Move info")]
     [SerializeField] private float _moveSpeed;
     [SerializeField] private float _jumpForce;
+    [SerializeField] private float _dashSpeed;
+    [SerializeField] private float _dashDuration;
 
     [Header("Collision info")]
     [SerializeField] private Transform _groundCheck;
@@ -22,7 +24,9 @@ public class Player : MonoBehaviour
     #region Properties
     public float MoveSpeed => _moveSpeed;
     public float JumpForce => _jumpForce;
-    public int _facingDirection { get; private set; } = 1;
+    public float DashDuration => _dashDuration;
+    public float DashSpeed => _dashSpeed;
+    public int FacingDirection { get; private set; } = 1;
     #endregion
 
     #region Component
@@ -36,6 +40,7 @@ public class Player : MonoBehaviour
     public PlayerMoveState MoveState { get; private set; }
     public PlayerJumpState JumpState { get; private set; }
     public PlayerAirState AirState { get; private set; }
+    public PlayerDashState DashState { get; private set; }
     #endregion
 
     public void SetVelocity(float _xVelocity, float _yVelocity)
@@ -48,7 +53,7 @@ public class Player : MonoBehaviour
 
     public void Flip()
     {
-        _facingDirection *= -1;
+        FacingDirection *= -1;
         _isFacingRight = !_isFacingRight;
         transform.Rotate(0, 180, 0);
     }
@@ -68,6 +73,7 @@ public class Player : MonoBehaviour
         MoveState = new PlayerMoveState(this, StateMachine, "Move");
         JumpState = new PlayerJumpState(this, StateMachine, "Jump");
         AirState = new PlayerAirState(this, StateMachine, "Jump");
+        DashState = new PlayerDashState(this, StateMachine, "Dash");
     }
 
     private void Start()
