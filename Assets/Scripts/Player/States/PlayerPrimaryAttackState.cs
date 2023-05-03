@@ -19,12 +19,15 @@ public class PlayerPrimaryAttackState : PlayerState
             _comboCounter = 0;
 
         player.Animator.SetInteger("ComboCounter", _comboCounter);
+        player.SetVelocity(player.AttackMovement[_comboCounter].x * player.FacingDirection, player.AttackMovement[_comboCounter].y);
+        stateTimer = .1f;
     }
 
     public override void Exit()
     {
         base.Exit();
 
+        player.StartCoroutine(player.BusyFor(player.ComboAttackWaitingTime));
         _comboCounter++;
         _lastTimeAttacked = Time.time;
     }
@@ -32,6 +35,9 @@ public class PlayerPrimaryAttackState : PlayerState
     public override void Update()
     {
         base.Update();
+
+        if (stateTimer < 0)
+            player.ZeroVelocity();
 
         if (triggerCalled)
             stateMachine.ChangeState(player.IdleState);

@@ -6,13 +6,15 @@ using UnityEngine;
 [RequireComponent(typeof(Rigidbody2D))]
 public class Player : MonoBehaviour
 {
+    #region Fields
     [Header("Move info")]
     [SerializeField] private float _moveSpeed;
     [SerializeField] private float _jumpForce;
     [SerializeField] private float _wallJumpForce;
     [SerializeField] private float _slidCoefficient;
 
-    [Header("Attack info")]
+    [Header("Attack details")]
+    [SerializeField] private Vector2[] _attackMovement;
     [SerializeField] private float _comboAttackWaitingTime;
 
     [Header("Dash info")]
@@ -32,10 +34,12 @@ public class Player : MonoBehaviour
     private bool _isFacingRight = true;
     private float _dashDirection;
     private float _dashUsageTimer;
+    #endregion
 
     #region Properties
     public float MoveSpeed => _moveSpeed;
     public float JumpForce => _jumpForce;
+    public Vector2[] AttackMovement => _attackMovement;
     public float ComboAttackWaitingTime => _comboAttackWaitingTime;
     public float WallJumpForce => _wallJumpForce;
     public float SlidCoefficient => _slidCoefficient;
@@ -43,6 +47,7 @@ public class Player : MonoBehaviour
     public float DashSpeed => _dashSpeed;
     public float DashDir => _dashDirection;
     public int FacingDirection { get; private set; } = 1;
+    public bool IsBusy { get; private set; }
     #endregion
 
     #region Component
@@ -62,16 +67,23 @@ public class Player : MonoBehaviour
     public PlayerPrimaryAttackState PrimaryAttackState { get; private set; }
     #endregion
 
+    #region Velocity Methods
     public void SetVelocity(float _xVelocity, float _yVelocity)
     {
         Rigidbody.velocity = new Vector2(_xVelocity, _yVelocity);
         FlipController(_xVelocity);
     }
 
+    public void ZeroVelocity() => Rigidbody.velocity = new Vector2(0, 0);
+    #endregion
+
+    #region Collision Methods
     public bool IsGroundDetected() => Physics2D.Raycast(_groundCheck.position, Vector2.down, _groundCheckDistance, _groundLayer);
 
     public bool IsWallDetected() => Physics2D.Raycast(_wallCheck.position, Vector2.right * FacingDirection, _wallCheckDistance, _groundLayer);
+    #endregion
 
+    #region Flip Methods
     public void Flip()
     {
         FacingDirection *= -1;
@@ -86,8 +98,16 @@ public class Player : MonoBehaviour
         else if (x < 0 && _isFacingRight)
             Flip();
     }
+    #endregion
 
     public void AnimationTrigger() => StateMachine.CurrentState.AnimationFinishTrigger();
+
+    public IEnumerator BusyFor(float _seconds)
+    {
+        IsBusy = true;
+        yield return new WaitForSeconds(_seconds);
+        IsBusy = false;
+    }
 
     private void Awake()
     {
@@ -123,7 +143,7 @@ public class Player : MonoBehaviour
 
     private void CheckForDashInput()
     {
-        if(IsWallDetected()) 
+        if (IsWallDetected())
             return;
 
         _dashUsageTimer -= Time.deltaTime;
