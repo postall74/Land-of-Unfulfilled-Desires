@@ -55,6 +55,7 @@ public class Player : MonoBehaviour
     public PlayerWallJumpState WallJumpState { get; private set; }
     public PlayerWallSlideState WallSlideState { get; private set; }
     public PlayerDashState DashState { get; private set; }
+    public PlayerPrimaryAttackState PrimaryAttackState { get; private set; }
     #endregion
 
     public void SetVelocity(float _xVelocity, float _yVelocity)
@@ -82,6 +83,8 @@ public class Player : MonoBehaviour
             Flip();
     }
 
+    public void AnimationTrigger() => StateMachine.CurrentState.AnimationFinishTrigger();
+
     private void Awake()
     {
         StateMachine = new PlayerStateMachine();
@@ -92,6 +95,7 @@ public class Player : MonoBehaviour
         WallJumpState = new PlayerWallJumpState(this, StateMachine, "Jump");
         WallSlideState = new PlayerWallSlideState(this, StateMachine, "WallSlide");
         DashState = new PlayerDashState(this, StateMachine, "Dash");
+        PrimaryAttackState = new PlayerPrimaryAttackState(this, StateMachine, "Attack");
     }
 
     private void Start()
