@@ -1,119 +1,162 @@
+using System.Collections;
+using System.Collections.Generic;
+using UnityEditor.Tilemaps;
 using UnityEngine;
 
 [RequireComponent(typeof(Rigidbody2D))]
-public class Player : Entity
+public class Player : MonoBehaviour
 {
-    [Header("Attack info")]
-    [SerializeField] private float _comboTime = .3f;
-    private float _comboTimeWindow;
-    private bool _isAttacking;
-    private int _comboCounter;
-    [Header("Movment info")]
+    #region Fields
+    [Header("Move info")]
     [SerializeField] private float _moveSpeed;
     [SerializeField] private float _jumpForce;
+    [SerializeField] private float _wallJumpForce;
+    [SerializeField] private float _slidCoefficient;
+
+    [Header("Attack details")]
+    [SerializeField] private Vector2[] _attackMovement;
+    [SerializeField] private float _comboAttackWaitingTime;
+
     [Header("Dash info")]
+    [SerializeField] private float _dashCooldown;
     [SerializeField] private float _dashSpeed;
     [SerializeField] private float _dashDuration;
-    [SerializeField] private float _dashCooldown;
-    private float _dashTime;
-    private float _dashCooldownTimer;
 
-    private float _xInput;
+    [Header("Collision info")]
+    [SerializeField] private Transform _groundCheck;
+    [SerializeField] private float _groundCheckDistance;
+    [Space]
+    [SerializeField] private Transform _wallCheck;
+    [SerializeField] private float _wallCheckDistance;
+    [Space]
+    [SerializeField] private LayerMask _groundLayer;
 
-    public void AttackOver()
+    private bool _isFacingRight = true;
+    private float _dashDirection;
+    private float _dashUsageTimer;
+    #endregion
+
+    #region Properties
+    public float MoveSpeed => _moveSpeed;
+    public float JumpForce => _jumpForce;
+    public Vector2[] AttackMovement => _attackMovement;
+    public float ComboAttackWaitingTime => _comboAttackWaitingTime;
+    public float WallJumpForce => _wallJumpForce;
+    public float SlidCoefficient => _slidCoefficient;
+    public float DashDuration => _dashDuration;
+    public float DashSpeed => _dashSpeed;
+    public float DashDir => _dashDirection;
+    public int FacingDirection { get; private set; } = 1;
+    public bool IsBusy { get; private set; }
+    #endregion
+
+    #region Component
+    public Animator Animator { get; private set; }
+    public Rigidbody2D Rigidbody { get; private set; }
+    #endregion
+
+    #region States
+    public PlayerStateMachine StateMachine { get; private set; }
+    public PlayerIdleState IdleState { get; private set; }
+    public PlayerMoveState MoveState { get; private set; }
+    public PlayerJumpState JumpState { get; private set; }
+    public PlayerAirState AirState { get; private set; }
+    public PlayerWallJumpState WallJumpState { get; private set; }
+    public PlayerWallSlideState WallSlideState { get; private set; }
+    public PlayerDashState DashState { get; private set; }
+    public PlayerPrimaryAttackState PrimaryAttackState { get; private set; }
+    #endregion
+
+    #region Velocity Methods
+    public void SetVelocity(float _xVelocity, float _yVelocity)
     {
-        _isAttacking = false;
-        _comboCounter++;
-
-        if (_comboCounter > 2)
-            _comboCounter = 0;
+        Rigidbody.velocity = new Vector2(_xVelocity, _yVelocity);
+        FlipController(_xVelocity);
     }
 
-    protected override void Start()
+    public void ZeroVelocity() => Rigidbody.velocity = new Vector2(0, 0);
+    #endregion
+
+    #region Collision Methods
+    public bool IsGroundDetected() => Physics2D.Raycast(_groundCheck.position, Vector2.down, _groundCheckDistance, _groundLayer);
+
+    public bool IsWallDetected() => Physics2D.Raycast(_wallCheck.position, Vector2.right * FacingDirection, _wallCheckDistance, _groundLayer);
+    #endregion
+
+    #region Flip Methods
+    public void Flip()
     {
-        base.Start();
+        FacingDirection *= -1;
+        _isFacingRight = !_isFacingRight;
+        transform.Rotate(0, 180, 0);
     }
 
-    protected override void Update()
+    public void FlipController(float x)
     {
-        base.Update();
-        Movement();
-        CheckInput();
-        
-        _dashTime -= Time.deltaTime;
-        _dashCooldownTimer -= Time.deltaTime;
-        _comboTimeWindow -= Time.deltaTime;
+        if (x > 0 && !_isFacingRight)
+            Flip();
+        else if (x < 0 && _isFacingRight)
+            Flip();
+    }
+    #endregion
 
-        FlipController();
-        AnimatorController();
+    public void AnimationTrigger() => StateMachine.CurrentState.AnimationFinishTrigger();
+
+    public IEnumerator BusyFor(float _seconds)
+    {
+        IsBusy = true;
+        yield return new WaitForSeconds(_seconds);
+        IsBusy = false;
     }
 
-    private void CheckInput()
+    private void Awake()
     {
-        _xInput = Input.GetAxisRaw("Horizontal");
-
-        if (Input.GetKeyDown(KeyCode.Mouse0))
-        {
-            StartAttackEvent();
-        }
-
-        if (Input.GetKeyDown(KeyCode.Space))
-            Jump();
-
-        if (Input.GetKeyDown(KeyCode.LeftShift))
-            DashAbility();
+        StateMachine = new PlayerStateMachine();
+        IdleState = new PlayerIdleState(this, StateMachine, "Idle");
+        MoveState = new PlayerMoveState(this, StateMachine, "Move");
+        JumpState = new PlayerJumpState(this, StateMachine, "Jump");
+        AirState = new PlayerAirState(this, StateMachine, "Jump");
+        WallJumpState = new PlayerWallJumpState(this, StateMachine, "Jump");
+        WallSlideState = new PlayerWallSlideState(this, StateMachine, "WallSlide");
+        DashState = new PlayerDashState(this, StateMachine, "Dash");
+        PrimaryAttackState = new PlayerPrimaryAttackState(this, StateMachine, "Attack");
     }
 
-    private void StartAttackEvent()
+    private void Start()
     {
-        if (!_isGround)
+        Animator = GetComponentInChildren<Animator>();
+        Rigidbody = GetComponent<Rigidbody2D>();
+        StateMachine.Initialize(IdleState);
+    }
+
+    private void Update()
+    {
+        StateMachine.CurrentState.Update();
+        CheckForDashInput();
+    }
+
+    private void OnDrawGizmos()
+    {
+        Gizmos.DrawLine(_groundCheck.position, new Vector3(_groundCheck.position.x, _groundCheck.position.y - _groundCheckDistance));
+        Gizmos.DrawLine(_wallCheck.position, new Vector3(_wallCheck.position.x + _wallCheckDistance, _wallCheck.position.y));
+    }
+
+    private void CheckForDashInput()
+    {
+        if (IsWallDetected())
             return;
 
-        if (_comboTimeWindow < 0)
-            _comboCounter = 0;
+        _dashUsageTimer -= Time.deltaTime;
 
-        _isAttacking = true;
-        _comboTimeWindow = _comboTime;
-    }
-
-    private void DashAbility()
-    {
-        if (_dashCooldownTimer < 0 && !_isAttacking)
+        if (Input.GetKeyDown(KeyCode.LeftShift) && _dashUsageTimer < 0)
         {
-            _dashCooldownTimer = _dashCooldown;
-            _dashTime = _dashDuration;
+            _dashUsageTimer = _dashCooldown;
+            _dashDirection = Input.GetAxisRaw("Horizontal");
+
+            if (_dashDirection == 0)
+                _dashDirection = FacingDirection;
+
+            StateMachine.ChangeState(DashState);
         }
-    }
-
-    private void Movement()
-    {
-        if (_isAttacking)
-            _rb.velocity = new Vector2(0, 0);
-        else if (_dashTime > 0)
-            _rb.velocity = new Vector2(_faceDirection * _dashSpeed, 0);
-        else
-            _rb.velocity = new Vector2(_xInput * _moveSpeed, _rb.velocity.y);
-    }
-
-    private void Jump()
-    {
-        if (_isGround)
-            _rb.velocity = new Vector2(_rb.velocity.x, _jumpForce);
-    }
-
-    private void AnimatorController()
-    {
-        bool isMoving = _rb.velocity.x != 0;
-        _animator.SetFloat("yVelocity", _rb.velocity.y);
-        _animator.SetBool("isMoving", isMoving);
-        _animator.SetBool("isGrounded", _isGround);
-        _animator.SetBool("isDashing", _dashTime > 0);
-        _animator.SetBool("isAttacking", _isAttacking);
-        _animator.SetInteger("comboCounter", _comboCounter);
-    }
-
-    private void FlipController()
-    {
-        if ((_rb.velocity.x > 0 && !_faceRight) || (_rb.velocity.x < 0 && _faceRight)) Flip();
     }
 }
