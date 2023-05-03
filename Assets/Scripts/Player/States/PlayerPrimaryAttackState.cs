@@ -6,7 +6,15 @@ public class PlayerPrimaryAttackState : PlayerState
 {
     private int _comboCounter;
     private float _lastTimeAttacked;
-    
+
+    private float ChoosingDirectionOfAttack()
+    {
+        float attackDir = player.FacingDirection;
+        if (xInput != 0)
+            attackDir = xInput;
+        return attackDir;
+    }
+
     public PlayerPrimaryAttackState(Player player, PlayerStateMachine stateMachine, string animBoolName) : base(player, stateMachine, animBoolName)
     {
     }
@@ -19,7 +27,7 @@ public class PlayerPrimaryAttackState : PlayerState
             _comboCounter = 0;
 
         player.Animator.SetInteger("ComboCounter", _comboCounter);
-        player.SetVelocity(player.AttackMovement[_comboCounter].x * player.FacingDirection, player.AttackMovement[_comboCounter].y);
+        player.SetVelocity(player.AttackMovement[_comboCounter].x * ChoosingDirectionOfAttack(), player.AttackMovement[_comboCounter].y);
         stateTimer = .1f;
     }
 
