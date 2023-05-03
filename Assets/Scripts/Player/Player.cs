@@ -12,6 +12,9 @@ public class Player : MonoBehaviour
     [SerializeField] private float _wallJumpForce;
     [SerializeField] private float _slidCoefficient;
 
+    [Header("Attack info")]
+    [SerializeField] private float _comboAttackWaitingTime;
+
     [Header("Dash info")]
     [SerializeField] private float _dashCooldown;
     [SerializeField] private float _dashSpeed;
@@ -33,6 +36,7 @@ public class Player : MonoBehaviour
     #region Properties
     public float MoveSpeed => _moveSpeed;
     public float JumpForce => _jumpForce;
+    public float ComboAttackWaitingTime => _comboAttackWaitingTime;
     public float WallJumpForce => _wallJumpForce;
     public float SlidCoefficient => _slidCoefficient;
     public float DashDuration => _dashDuration;
