@@ -3,8 +3,8 @@ using System.Collections.Generic;
 using UnityEditor.Tilemaps;
 using UnityEngine;
 
-[RequireComponent(typeof(Rigidbody2D))]
-public class Player : MonoBehaviour
+
+public class Player : Entity
 {
     #region Fields
     [Header("Move info")]
@@ -22,16 +22,6 @@ public class Player : MonoBehaviour
     [SerializeField] private float _dashSpeed;
     [SerializeField] private float _dashDuration;
 
-    [Header("Collision info")]
-    [SerializeField] private Transform _groundCheck;
-    [SerializeField] private float _groundCheckDistance;
-    [Space]
-    [SerializeField] private Transform _wallCheck;
-    [SerializeField] private float _wallCheckDistance;
-    [Space]
-    [SerializeField] private LayerMask _groundLayer;
-
-    private bool _isFacingRight = true;
     private float _dashDirection;
     private float _dashUsageTimer;
     #endregion
@@ -46,13 +36,7 @@ public class Player : MonoBehaviour
     public float DashDuration => _dashDuration;
     public float DashSpeed => _dashSpeed;
     public float DashDir => _dashDirection;
-    public int FacingDirection { get; private set; } = 1;
     public bool IsBusy { get; private set; }
-    #endregion
-
-    #region Component
-    public Animator Animator { get; private set; }
-    public Rigidbody2D Rigidbody { get; private set; }
     #endregion
 
     #region States
@@ -67,39 +51,6 @@ public class Player : MonoBehaviour
     public PlayerPrimaryAttackState PrimaryAttackState { get; private set; }
     #endregion
 
-    #region Velocity Methods
-    public void SetVelocity(float _xVelocity, float _yVelocity)
-    {
-        Rigidbody.velocity = new Vector2(_xVelocity, _yVelocity);
-        FlipController(_xVelocity);
-    }
-
-    public void ZeroVelocity() => Rigidbody.velocity = new Vector2(0, 0);
-    #endregion
-
-    #region Collision Methods
-    public bool IsGroundDetected() => Physics2D.Raycast(_groundCheck.position, Vector2.down, _groundCheckDistance, _groundLayer);
-
-    public bool IsWallDetected() => Physics2D.Raycast(_wallCheck.position, Vector2.right * FacingDirection, _wallCheckDistance, _groundLayer);
-    #endregion
-
-    #region Flip Methods
-    public void Flip()
-    {
-        FacingDirection *= -1;
-        _isFacingRight = !_isFacingRight;
-        transform.Rotate(0, 180, 0);
-    }
-
-    public void FlipController(float x)
-    {
-        if (x > 0 && !_isFacingRight)
-            Flip();
-        else if (x < 0 && _isFacingRight)
-            Flip();
-    }
-    #endregion
-
     public void AnimationTrigger() => StateMachine.CurrentState.AnimationFinishTrigger();
 
     public IEnumerator BusyFor(float _seconds)
@@ -109,8 +60,9 @@ public class Player : MonoBehaviour
         IsBusy = false;
     }
 
-    private void Awake()
+    protected override void Awake()
     {
+        base.Awake();
         StateMachine = new PlayerStateMachine();
         IdleState = new PlayerIdleState(this, StateMachine, "Idle");
         MoveState = new PlayerMoveState(this, StateMachine, "Move");
@@ -122,23 +74,17 @@ public class Player : MonoBehaviour
         PrimaryAttackState = new PlayerPrimaryAttackState(this, StateMachine, "Attack");
     }
 
-    private void Start()
+    protected override void Start()
     {
-        Animator = GetComponentInChildren<Animator>();
-        Rigidbody = GetComponent<Rigidbody2D>();
+        base.Start();
         StateMachine.Initialize(IdleState);
     }
 
-    private void Update()
+    protected override void Update()
     {
+        base.Update();
         StateMachine.CurrentState.Update();
         CheckForDashInput();
-    }
-
-    private void OnDrawGizmos()
-    {
-        Gizmos.DrawLine(_groundCheck.position, new Vector3(_groundCheck.position.x, _groundCheck.position.y - _groundCheckDistance));
-        Gizmos.DrawLine(_wallCheck.position, new Vector3(_wallCheck.position.x + _wallCheckDistance, _wallCheck.position.y));
     }
 
     private void CheckForDashInput()
