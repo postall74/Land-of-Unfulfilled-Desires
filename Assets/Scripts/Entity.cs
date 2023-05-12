@@ -40,7 +40,7 @@ public class Entity : MonoBehaviour
         FlipController(_xVelocity);
     }
 
-    public void ZeroVelocity() => Rigidbody.velocity = new Vector2(0, 0);
+    public void SetZeroVelocity() => Rigidbody.velocity = new Vector2(0, 0);
     #endregion
 
     #region Flip Methods
