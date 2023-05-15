@@ -31,11 +31,18 @@ public class SkeletonBattleState : EnemyState
 
         if (_enemy.IsPlayerDetected())
         {
+            stateTimer = _enemy.BattleTime;
+
             if (_enemy.IsPlayerDetected().distance < _enemy.AttackDistance)
             {
                 if (CanAttack())
                     stateMachine.ChangeState(_enemy.AttackState);
             }
+        }
+        else
+        {
+            if (stateTimer < 0 || Vector2.Distance(_player.transform.position, _enemy.transform.position) < 15)
+                stateMachine.ChangeState(_enemy.IdleState);
         }
 
         if (_player.position.x > _enemy.transform.position.x)

@@ -4,16 +4,18 @@ using UnityEngine;
 
 public class SkeletonGroundedState : EnemyState
 {
-    protected Enemy_skeleton _enemy;
+    protected Enemy_skeleton enemy;
+    protected Transform player;
 
     public SkeletonGroundedState(Enemy enemyBase, EnemyStateMachine stateMachine, string animBoolName, Enemy_skeleton enemy) : base(enemy, stateMachine, animBoolName)
     {
-        _enemy = enemy;
+        this.enemy = enemy;
     }
 
     public override void Enter()
     {
         base.Enter();
+        player = GameObject.Find("Player").transform;
     }
 
     public override void Exit()
@@ -25,7 +27,7 @@ public class SkeletonGroundedState : EnemyState
     {
         base.Update();
 
-        if (_enemy.IsPlayerDetected())
-            stateMachine.ChangeState(_enemy.BattleState);
+        if (enemy.IsPlayerDetected() || Vector2.Distance(enemy.transform.position, player.transform.position) < 2)
+            stateMachine.ChangeState(enemy.BattleState);
     }
 }

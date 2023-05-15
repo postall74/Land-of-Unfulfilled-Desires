@@ -8,6 +8,7 @@ public class Enemy : Entity
     [Header("Move info")]
     [SerializeField] private float _moveSpeed;
     [SerializeField] private float _idleTime;
+    [SerializeField] private float _battleTime;
     [Space]
     [Header("Player Detected")]
     [SerializeField] private LayerMask _whatIsPlayer;
@@ -20,8 +21,8 @@ public class Enemy : Entity
 
     #region Properties
     public float MoveSpeed => _moveSpeed;
-    public float idleTime => _idleTime;
-    //public LayerMask WhatIsPlayer => _whatIsPlayer;
+    public float IdleTime => _idleTime;
+    public float BattleTime => _battleTime;
     public float AttackDistance => _attackDistance;
     public float AttackCooldown => _attackCooldown;
     public float LastTimeAttacked => _lastTimeAttacked;

@@ -21,12 +21,12 @@ public class SkeletonMoveState : SkeletonGroundedState
     public override void Update()
     {
         base.Update();
-        _enemy.SetVelocity(_enemy.MoveSpeed * _enemy.FacingDirection, _enemy.Rigidbody.velocity.y);
+        enemy.SetVelocity(enemy.MoveSpeed * enemy.FacingDirection, enemy.Rigidbody.velocity.y);
 
-        if (_enemy.IsWallDetected() || !_enemy.IsGroundDetected())
+        if (enemy.IsWallDetected() || !enemy.IsGroundDetected())
         {
-            _enemy.Flip();
-            stateMachine.ChangeState(_enemy.IdleState);
+            enemy.Flip();
+            stateMachine.ChangeState(enemy.IdleState);
         }
     }
 }
