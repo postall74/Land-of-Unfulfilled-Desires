@@ -9,9 +9,12 @@ public class PlayerPrimaryAttackState : PlayerState
 
     private float ChoosingDirectionOfAttack()
     {
+        //xInput = 0; // if we have a bug with direction attack, we reset xInput to 0...
         float attackDir = player.FacingDirection;
+
         if (xInput != 0)
             attackDir = xInput;
+
         return attackDir;
     }
 

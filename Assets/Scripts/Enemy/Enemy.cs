@@ -17,6 +17,12 @@ public class Enemy : Entity
     [SerializeField] private float _attackDistance;
     [SerializeField] private float _attackCooldown;
     [HideInInspector] private float _lastTimeAttacked;
+    [Header("Stunned info")]
+    [SerializeField] private float _stunDuration;
+    [SerializeField] private Vector2 _stunDirection;
+    [SerializeField] protected GameObject _counterImage;
+
+    protected bool _canBeStunned;
     #endregion
 
     #region Properties
@@ -26,6 +32,8 @@ public class Enemy : Entity
     public float AttackDistance => _attackDistance;
     public float AttackCooldown => _attackCooldown;
     public float LastTimeAttacked => _lastTimeAttacked;
+    public float StunDuration => _stunDuration;
+    public Vector2 StunDirection => _stunDirection;
     #endregion
 
     #region States
@@ -37,6 +45,23 @@ public class Enemy : Entity
     public virtual void AnimationFinishTrigger() => StateMachine.CurrentState.AnimationFinishTrigger();
 
     public virtual void SetLastTimeAttack() => _lastTimeAttacked = Time.time;
+
+    public virtual void SetCounterAttackWindow(bool state)
+    {
+        _canBeStunned = state;
+        _counterImage.SetActive(state);
+    }
+
+    public virtual bool CanBeStunned()
+    {
+        if (_canBeStunned)
+        {
+            SetCounterAttackWindow(false);
+            return true;
+        }
+
+        return false;
+    }
 
     protected override void Awake()
     {

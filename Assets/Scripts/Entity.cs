@@ -14,18 +14,36 @@ public class Entity : MonoBehaviour
     [SerializeField] protected float wallCheckDistance;
     [Space]
     [SerializeField] protected LayerMask groundLayer;
+    [Space]
+    [Header("Attack info")]
+    [SerializeField] private Transform _attackCheck;
+    [SerializeField] private float _attackCheckRadius;
+    [Header("Knockback info")]
+    [SerializeField] protected Vector2 _knockbackDirection;
+    [SerializeField] protected float _knockbackDuration;
 
+    protected bool _isKnocked;
     protected bool _isFacingRight = true;
     #endregion
 
     #region Properties
     public int FacingDirection { get; private set; } = 1;
+    public Transform AttackCheck => _attackCheck;
+    public float AttackCheckRadius => _attackCheckRadius;
     #endregion
 
     #region Component
     public Animator Animator { get; private set; }
     public Rigidbody2D Rigidbody { get; private set; }
+    public EntityFX EntityFX { get; private set; }
     #endregion
+
+    public virtual void Damage()
+    {
+        StartCoroutine(HitKnockback());
+        StartCoroutine(EntityFX.FlashFX());
+        Debug.Log(gameObject.name + " was daamged!");
+    }
 
     #region Collision Methods
     public virtual bool IsGroundDetected() => Physics2D.Raycast(groundCheck.position, Vector2.down, groundCheckDistance, groundLayer);
@@ -36,11 +54,20 @@ public class Entity : MonoBehaviour
     #region Velocity Methods
     public virtual void SetVelocity(float _xVelocity, float _yVelocity)
     {
+        if (_isKnocked)
+            return;
+
         Rigidbody.velocity = new Vector2(_xVelocity, _yVelocity);
         FlipController(_xVelocity);
     }
 
-    public void SetZeroVelocity() => Rigidbody.velocity = new Vector2(0, 0);
+    public void SetZeroVelocity()
+    {
+        if (_isKnocked)
+            return;
+
+        Rigidbody.velocity = new Vector2(0, 0);
+    }
     #endregion
 
     #region Flip Methods
@@ -60,6 +87,7 @@ public class Entity : MonoBehaviour
     }
     #endregion
 
+
     protected virtual void Awake()
     {
 
@@ -69,6 +97,7 @@ public class Entity : MonoBehaviour
     {
         Animator = GetComponentInChildren<Animator>();
         Rigidbody = GetComponent<Rigidbody2D>();
+        EntityFX = GetComponent<EntityFX>();
     }
 
     protected virtual void Update()
@@ -80,5 +109,14 @@ public class Entity : MonoBehaviour
     {
         Gizmos.DrawLine(groundCheck.position, new Vector3(groundCheck.position.x, groundCheck.position.y - groundCheckDistance));
         Gizmos.DrawLine(wallCheck.position, new Vector3(wallCheck.position.x + wallCheckDistance, wallCheck.position.y));
+        Gizmos.DrawWireSphere(_attackCheck.position, _attackCheckRadius);
+    }
+
+    protected virtual IEnumerator HitKnockback()
+    {
+        _isKnocked = true;
+        Rigidbody.velocity = new Vector2(_knockbackDirection.x * -FacingDirection, _knockbackDirection.y);
+        yield return new WaitForSeconds(_knockbackDuration);
+        _isKnocked = false;
     }
 }
