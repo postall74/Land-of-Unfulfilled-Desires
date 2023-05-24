@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.ComponentModel;
 using UnityEditor.Tilemaps;
 using UnityEngine;
 
@@ -16,6 +17,7 @@ public class Player : Entity
     [Header("Attack details")]
     [SerializeField] private Vector2[] _attackMovement;
     [SerializeField] private float _comboAttackWaitingTime;
+    [SerializeField] private float _counterAttackDuration = .2f;
 
     [Header("Dash info")]
     [SerializeField] private float _dashCooldown;
@@ -31,6 +33,7 @@ public class Player : Entity
     public float JumpForce => _jumpForce;
     public Vector2[] AttackMovement => _attackMovement;
     public float ComboAttackWaitingTime => _comboAttackWaitingTime;
+    public float CounterAttackDuration => _counterAttackDuration;
     public float WallJumpForce => _wallJumpForce;
     public float SlidCoefficient => _slidCoefficient;
     public float DashDuration => _dashDuration;
@@ -49,6 +52,7 @@ public class Player : Entity
     public PlayerWallSlideState WallSlideState { get; private set; }
     public PlayerDashState DashState { get; private set; }
     public PlayerPrimaryAttackState PrimaryAttackState { get; private set; }
+    public PlayerCounterAttackState CounterAttackState { get; private set; }
     #endregion
 
     public void AnimationTrigger() => StateMachine.CurrentState.AnimationFinishTrigger();
@@ -72,6 +76,7 @@ public class Player : Entity
         WallSlideState = new PlayerWallSlideState(this, StateMachine, "WallSlide");
         DashState = new PlayerDashState(this, StateMachine, "Dash");
         PrimaryAttackState = new PlayerPrimaryAttackState(this, StateMachine, "Attack");
+        CounterAttackState = new PlayerCounterAttackState(this, StateMachine, "CounterAttack");
     }
 
     protected override void Start()
