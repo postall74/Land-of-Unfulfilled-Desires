@@ -9,6 +9,7 @@ public class Enemy : Entity
     [SerializeField] private float _moveSpeed;
     [SerializeField] private float _idleTime;
     [SerializeField] private float _battleTime;
+    private float _defaultMoveSpeed;
     [Space]
     [Header("Player Detected")]
     [SerializeField] private LayerMask _whatIsPlayer;
@@ -63,10 +64,31 @@ public class Enemy : Entity
         return false;
     }
 
+    public virtual void FreezeTime(bool isTimeFrozen)
+    {
+        if (isTimeFrozen)
+        {
+            _moveSpeed = 0;
+            Animator.speed = 0;
+        }
+        else
+        {
+            _moveSpeed = _defaultMoveSpeed;
+            Animator.speed = 1;
+        }
+    }
+    public virtual IEnumerator FreezeTimerFor(float seconds)
+    {
+        FreezeTime(true);
+        yield return new WaitForSeconds(seconds);
+        FreezeTime(false);
+    }
+
     protected override void Awake()
     {
         base.Awake();
         StateMachine = new EnemyStateMachine();
+        _defaultMoveSpeed = _moveSpeed;
     }
 
     protected override void Update()
@@ -81,4 +103,5 @@ public class Enemy : Entity
         Gizmos.color = Color.red;
         Gizmos.DrawLine(transform.position, new Vector3(transform.position.x + _attackDistance * FacingDirection, transform.position.y));
     }
+
 }

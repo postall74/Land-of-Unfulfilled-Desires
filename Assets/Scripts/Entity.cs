@@ -42,7 +42,7 @@ public class Entity : MonoBehaviour
     {
         StartCoroutine(HitKnockback());
         StartCoroutine(EntityFX.FlashFX());
-        Debug.Log(gameObject.name + " was daamged!");
+        //Debug.Log(gameObject.name + " was daamged!");
     }
 
     #region Collision Methods

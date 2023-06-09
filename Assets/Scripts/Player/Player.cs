@@ -4,7 +4,6 @@ using System.ComponentModel;
 using UnityEditor.Tilemaps;
 using UnityEngine;
 
-
 public class Player : Entity
 {
     #region Fields
@@ -13,6 +12,7 @@ public class Player : Entity
     [SerializeField] private float _jumpForce;
     [SerializeField] private float _wallJumpForce;
     [SerializeField] private float _slidCoefficient;
+    [SerializeField] private float _swordReturnImpact;
 
     [Header("Attack details")]
     [SerializeField] private Vector2[] _attackMovement;
@@ -20,12 +20,10 @@ public class Player : Entity
     [SerializeField] private float _counterAttackDuration = .2f;
 
     [Header("Dash info")]
-    [SerializeField] private float _dashCooldown;
     [SerializeField] private float _dashSpeed;
     [SerializeField] private float _dashDuration;
 
     private float _dashDirection;
-    private float _dashUsageTimer;
     #endregion
 
     #region Properties
@@ -36,6 +34,7 @@ public class Player : Entity
     public float CounterAttackDuration => _counterAttackDuration;
     public float WallJumpForce => _wallJumpForce;
     public float SlidCoefficient => _slidCoefficient;
+    public float SwordReturnImpact => _swordReturnImpact;
     public float DashDuration => _dashDuration;
     public float DashSpeed => _dashSpeed;
     public float DashDir => _dashDirection;
@@ -53,9 +52,21 @@ public class Player : Entity
     public PlayerDashState DashState { get; private set; }
     public PlayerPrimaryAttackState PrimaryAttackState { get; private set; }
     public PlayerCounterAttackState CounterAttackState { get; private set; }
+    public PlayerAimSwordState AimSwordState { get; private set; }
+    public PlayerCatchSwordState CatchSwordState { get; private set; }
+    public SkillManager Skill { get; private set; }
+    public GameObject Sword { get; private set; }
     #endregion
 
     public void AnimationTrigger() => StateMachine.CurrentState.AnimationFinishTrigger();
+
+    public void AssingNewSword(GameObject newSword) => Sword = newSword;
+
+    public void CatchTheSword()
+    {
+        StateMachine.ChangeState(CatchSwordState);
+        Destroy(Sword);
+    }
 
     public IEnumerator BusyFor(float _seconds)
     {
@@ -75,14 +86,19 @@ public class Player : Entity
         WallJumpState = new PlayerWallJumpState(this, StateMachine, "Jump");
         WallSlideState = new PlayerWallSlideState(this, StateMachine, "WallSlide");
         DashState = new PlayerDashState(this, StateMachine, "Dash");
+
         PrimaryAttackState = new PlayerPrimaryAttackState(this, StateMachine, "Attack");
         CounterAttackState = new PlayerCounterAttackState(this, StateMachine, "CounterAttack");
+
+        AimSwordState = new PlayerAimSwordState(this, StateMachine, "AimSword");
+        CatchSwordState = new PlayerCatchSwordState(this, StateMachine, "CatchSword");
     }
 
     protected override void Start()
     {
         base.Start();
         StateMachine.Initialize(IdleState);
+        Skill = SkillManager.instance;
     }
 
     protected override void Update()
@@ -97,11 +113,8 @@ public class Player : Entity
         if (IsWallDetected())
             return;
 
-        _dashUsageTimer -= Time.deltaTime;
-
-        if (Input.GetKeyDown(KeyCode.LeftShift) && _dashUsageTimer < 0)
+        if (Input.GetKeyDown(KeyCode.LeftShift) && SkillManager.instance.Dash.CanUseSkill())
         {
-            _dashUsageTimer = _dashCooldown;
             _dashDirection = Input.GetAxisRaw("Horizontal");
 
             if (_dashDirection == 0)
