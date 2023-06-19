@@ -35,6 +35,7 @@ public class Entity : MonoBehaviour
     #region Component
     public Animator Animator { get; private set; }
     public Rigidbody2D Rigidbody { get; private set; }
+    public SpriteRenderer SpriteRenderer { get; private set; }
     public EntityFX EntityFX { get; private set; }
     #endregion
 
@@ -87,6 +88,13 @@ public class Entity : MonoBehaviour
     }
     #endregion
 
+    public void MakeTransprent(bool transprent)
+    {
+        if (transprent)
+            SpriteRenderer.color = Color.clear;
+        else
+            SpriteRenderer.color = Color.white;
+    }
 
     protected virtual void Awake()
     {
@@ -97,6 +105,7 @@ public class Entity : MonoBehaviour
     {
         Animator = GetComponentInChildren<Animator>();
         Rigidbody = GetComponent<Rigidbody2D>();
+        SpriteRenderer = GetComponentInChildren<SpriteRenderer>();
         EntityFX = GetComponent<EntityFX>();
     }
 

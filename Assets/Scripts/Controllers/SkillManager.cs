@@ -2,6 +2,10 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+[RequireComponent(typeof(DashSkill))]
+[RequireComponent(typeof(CloneSkill))]
+[RequireComponent(typeof(SwordSkill))]
+[RequireComponent(typeof(BlackholeSkill))]
 public class SkillManager : MonoBehaviour
 {
     public static SkillManager instance;
@@ -10,6 +14,7 @@ public class SkillManager : MonoBehaviour
     public DashSkill Dash { get; private set; }
     public CloneSkill Clone { get; private set; }
     public SwordSkill Sword { get; private set; }
+    public BlackholeSkill Blackhole { get; private set; }
     #endregion
 
 
@@ -26,5 +31,6 @@ public class SkillManager : MonoBehaviour
         Dash = GetComponent<DashSkill>();
         Clone = GetComponent<CloneSkill>();
         Sword = GetComponent<SwordSkill>();
+        Blackhole = GetComponent<BlackholeSkill>();
     }
 }

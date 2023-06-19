@@ -77,6 +77,7 @@ public class Enemy : Entity
             Animator.speed = 1;
         }
     }
+
     public virtual IEnumerator FreezeTimerFor(float seconds)
     {
         FreezeTime(true);

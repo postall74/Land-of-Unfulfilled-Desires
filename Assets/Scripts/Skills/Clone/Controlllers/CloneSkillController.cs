@@ -18,12 +18,12 @@ public class CloneSkillController : MonoBehaviour
     private Transform _closestEnemy;
     #endregion
 
-    public void SetupClone(Transform newTransform, float cloneDuration, bool canAttack)
+    public void SetupClone(Transform newTransform, float cloneDuration, bool canAttack, Vector3 offset)
     {
         if (canAttack)
             _anim.SetInteger("AttackNumber", Random.Range(1, 3));
 
-        transform.position = newTransform.position;
+        transform.position = newTransform.position + offset;
         _cloneTimer = cloneDuration;
         FaceClosestTarget();
     }

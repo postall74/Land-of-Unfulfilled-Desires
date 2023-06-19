@@ -56,10 +56,12 @@ public class Player : Entity
     public PlayerCatchSwordState CatchSwordState { get; private set; }
     public SkillManager Skill { get; private set; }
     public GameObject Sword { get; private set; }
+    public PlayerBlackholeState BlackholeState { get; private set; }
     #endregion
 
     public void AnimationTrigger() => StateMachine.CurrentState.AnimationFinishTrigger();
 
+    #region Sword Skill Methods
     public void AssingNewSword(GameObject newSword) => Sword = newSword;
 
     public void CatchTheSword()
@@ -67,6 +69,7 @@ public class Player : Entity
         StateMachine.ChangeState(CatchSwordState);
         Destroy(Sword);
     }
+    #endregion
 
     public IEnumerator BusyFor(float _seconds)
     {
@@ -92,6 +95,8 @@ public class Player : Entity
 
         AimSwordState = new PlayerAimSwordState(this, StateMachine, "AimSword");
         CatchSwordState = new PlayerCatchSwordState(this, StateMachine, "CatchSword");
+
+        BlackholeState = new PlayerBlackholeState(this, StateMachine, "Jump");
     }
 
     protected override void Start()

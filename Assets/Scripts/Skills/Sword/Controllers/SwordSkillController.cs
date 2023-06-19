@@ -44,6 +44,7 @@ public class SwordSkillController : MonoBehaviour
     public List<Transform> EnemyTarget => _enemyTarget;
     #endregion
 
+    #region Constructor and Destructor new Sword
     public void SetupSword(Vector2 direction, float gravityScale, Player player, float freezeTimeDuration, float returnSpeed)
     {
         _player = player;
@@ -60,7 +61,9 @@ public class SwordSkillController : MonoBehaviour
     }
 
     private void DestroySword() => Destroy(gameObject);
+    #endregion
 
+    #region Setup properties new Sword
     public void SetupBounce(bool isBouncing, int amountOfBounce, float bounceSpeed)
     {
         _isBouncing = isBouncing;
@@ -78,6 +81,7 @@ public class SwordSkillController : MonoBehaviour
         _spinDuration = spinDuration;
         _hitCooldown = hitCooldown;
     }
+    #endregion
 
     public void ReturnSword()
     {
@@ -200,6 +204,8 @@ public class SwordSkillController : MonoBehaviour
         }
     }
 
+    
+    
     private void SpinLogic()
     {
         if (_isSpinning)
@@ -210,9 +216,10 @@ public class SwordSkillController : MonoBehaviour
             if (_wasStoped)
             {
                 _spinTimer -= Time.deltaTime;
-                //transform.position = Vector2.MoveTowards(transform.position, new Vector2(transform.position.x + _spinDirection, transform.position.y), 1.5f * Time.deltaTime);
-                //
-
+                /// summary:
+                /// This option added function direction sword to forward after throw.
+                /// transform.position = Vector2.MoveTowards(transform.position, new Vector2(transform.position.x + _spinDirection, transform.position.y), 1.5f * Time.deltaTime);
+                
                 if (_spinTimer < 0)
                 {
                     _isReturning = true;
