@@ -15,6 +15,7 @@ public class SkillManager : MonoBehaviour
     public CloneSkill Clone { get; private set; }
     public SwordSkill Sword { get; private set; }
     public BlackholeSkill Blackhole { get; private set; }
+    public CrystalSkill Crystal { get; private set; }
     #endregion
 
 
@@ -32,5 +33,6 @@ public class SkillManager : MonoBehaviour
         Clone = GetComponent<CloneSkill>();
         Sword = GetComponent<SwordSkill>();
         Blackhole = GetComponent<BlackholeSkill>();
+        Crystal = GetComponent<CrystalSkill>();
     }
 }

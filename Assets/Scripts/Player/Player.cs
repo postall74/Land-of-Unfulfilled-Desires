@@ -109,8 +109,14 @@ public class Player : Entity
     protected override void Update()
     {
         base.Update();
+
         StateMachine.CurrentState.Update();
         CheckForDashInput();
+
+        if (Input.GetKeyDown(KeyCode.F))
+        {
+            Skill.Crystal.CanUseSkill();
+        }
     }
 
     private void CheckForDashInput()

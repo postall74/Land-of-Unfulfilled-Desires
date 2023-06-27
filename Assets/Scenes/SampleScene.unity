@@ -6329,7 +6329,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 519420028}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -31.65591, y: -1.173861, z: -8}
+  m_LocalPosition: {x: -40.435432, y: -1.173861, z: -8}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -6644,7 +6644,7 @@ MonoBehaviour:
     ModeOverride: 0
     LensShift: {x: 0, y: 0}
     GateFit: 2
-    m_SensorSize: {x: 2.0036497, y: 1}
+    m_SensorSize: {x: 2.0874524, y: 1}
   m_Transitions:
     m_BlendHint: 0
     m_InheritPosition: 0
@@ -6661,7 +6661,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 597151971}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -31.65591, y: -1.173861, z: -8}
+  m_LocalPosition: {x: -40.435432, y: -1.173861, z: -8}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -20492,6 +20492,7 @@ GameObject:
   - component: {fileID: 2020213466}
   - component: {fileID: 2020213467}
   - component: {fileID: 2020213468}
+  - component: {fileID: 2020213469}
   m_Layer: 0
   m_Name: SkillManager
   m_TagString: Untagged
@@ -20568,7 +20569,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   cooldown: 0
-  swordType: 0
+  swordType: 2
   _bounceAmount: 4
   _bounceGravity: 4.5
   _bounceSpeed: 20
@@ -20601,12 +20602,30 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   cooldown: 0
   _blackholePrefab: {fileID: 5845133462169895606, guid: c771a67acbc48c04eba67f47f0f3d44c, type: 3}
-  _amountOfAttack: 2
-  _cloneAttackCooldown: 0.3
-  _blackholeDuration: 2.5
+  _amountOfAttack: 3
+  _cloneAttackCooldown: 0.35
+  _blackholeDuration: 4.5
   _maxSize: 15
   _growSpeed: 3
   _shrinkSpeed: 6
+--- !u!114 &2020213469
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2020213462}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 24da8ada8690a43408b4fb3c66f474fc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  cooldown: 0
+  _crystalDuration: 2
+  _crystalPrefab: {fileID: 3787525843861448258, guid: 28a2b73c317f28f4a99a4dc496f09e7d, type: 3}
+  _canExplode: 1
+  _moveSpeed: 6
+  _canMoveToEnemy: 1
 --- !u!1 &2039952490
 GameObject:
   m_ObjectHideFlags: 0
@@ -20671,7 +20690,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2039952490}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -33.58, y: -4.64, z: 0}
+  m_LocalPosition: {x: -42.44, y: -4.64, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
