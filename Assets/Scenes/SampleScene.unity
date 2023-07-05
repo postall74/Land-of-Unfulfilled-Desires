@@ -377,7 +377,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 100949897}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -36.16, y: -4.58, z: 0}
+  m_LocalPosition: {x: -42.07, y: -4.58, z: 0}
   m_LocalScale: {x: 1.4, y: 1.4, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -557,7 +557,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &243332456
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -6329,7 +6329,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 519420028}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -40.435432, y: -1.173861, z: -8}
+  m_LocalPosition: {x: -23.445435, y: -1.173861, z: -8}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -6451,7 +6451,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &550451542
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -6525,7 +6525,7 @@ Transform:
   - {fileID: 13757033}
   - {fileID: 937730729}
   m_Father: {fileID: 0}
-  m_RootOrder: 4
+  m_RootOrder: 7
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!61 &550451545
 BoxCollider2D:
@@ -6661,7 +6661,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 597151971}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -40.435432, y: -1.173861, z: -8}
+  m_LocalPosition: {x: -23.445435, y: -1.173861, z: -8}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -18493,7 +18493,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &817469432
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -18652,7 +18652,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 5
+  m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &844070993
 GameObject:
@@ -19184,7 +19184,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 971850160}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -31.32, y: -4.58, z: 0}
+  m_LocalPosition: {x: -27.650002, y: -4.58, z: 0}
   m_LocalScale: {x: 1.4, y: 1.4, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -20525,7 +20525,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 6
+  m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &2020213465
 MonoBehaviour:
@@ -20556,6 +20556,13 @@ MonoBehaviour:
   _clonePrefab: {fileID: 4536340612010576846, guid: f1c70bd1a97380d4ba3b50840704c486, type: 3}
   _cloneDuration: 1.5
   _canAttack: 1
+  _createCloneOnDashStart: 1
+  _createCloneOnDashOver: 1
+  _canCreateCloneOnCounterAttack: 1
+  _waitTimeCreateCloneOnCounterAttack: 0.5
+  _canDuplicateClone: 1
+  _chanceToDuplicateClone: 0
+  _crystalInsteadOfClone: 1
 --- !u!114 &2020213467
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -20602,9 +20609,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   cooldown: 0
   _blackholePrefab: {fileID: 5845133462169895606, guid: c771a67acbc48c04eba67f47f0f3d44c, type: 3}
-  _amountOfAttack: 3
+  _amountOfAttack: 7
   _cloneAttackCooldown: 0.35
-  _blackholeDuration: 4.5
+  _blackholeDuration: 3
   _maxSize: 15
   _growSpeed: 3
   _shrinkSpeed: 6
@@ -20623,9 +20630,11 @@ MonoBehaviour:
   cooldown: 0
   _crystalDuration: 2
   _crystalPrefab: {fileID: 3787525843861448258, guid: 28a2b73c317f28f4a99a4dc496f09e7d, type: 3}
+  _cloneInsteadOfCrystal: 0
   _canExplode: 1
   _moveSpeed: 6
   _canMoveToEnemy: 1
+  _canUseMultiStacks: 1
   _amountOfStacks: 3
   _multiStackCooldown: 4
   _useTimeWindow: 2.5
@@ -20633,7 +20642,6 @@ MonoBehaviour:
   - {fileID: 3787525843861448258, guid: 28a2b73c317f28f4a99a4dc496f09e7d, type: 3}
   - {fileID: 3787525843861448258, guid: 28a2b73c317f28f4a99a4dc496f09e7d, type: 3}
   - {fileID: 3787525843861448258, guid: 28a2b73c317f28f4a99a4dc496f09e7d, type: 3}
-  _canUseMultiStacks: 0
 --- !u!1 &2039952490
 GameObject:
   m_ObjectHideFlags: 0
@@ -20698,7 +20706,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2039952490}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -42.44, y: -4.64, z: 0}
+  m_LocalPosition: {x: -25.45, y: -4.64, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -20964,7 +20972,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8803851125302216019, guid: 333a165e8bf0b3747a5e8b7536b12060, type: 3}
       propertyPath: m_RootOrder
-      value: 7
+      value: 6
       objectReference: {fileID: 0}
     - target: {fileID: 8803851125302216019, guid: 333a165e8bf0b3747a5e8b7536b12060, type: 3}
       propertyPath: m_LocalPosition.x

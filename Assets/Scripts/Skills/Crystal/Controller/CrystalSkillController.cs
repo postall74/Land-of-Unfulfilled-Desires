@@ -1,6 +1,3 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 [RequireComponent(typeof(Animator), typeof(CircleCollider2D))]
@@ -12,6 +9,7 @@ public class CrystalSkillController : MonoBehaviour
     #endregion
 
     #region Fields
+    [SerializeField] private LayerMask _enemy;
     private float _crystalExistTimer;
     private bool _canExplode;
     private bool _canMove;
@@ -39,6 +37,17 @@ public class CrystalSkillController : MonoBehaviour
         }
         else
             SelfDestroy();
+    }
+
+    public void ChooseRandomEnemy()
+    {
+        float radius = SkillManager.instance.Blackhole.MaxSize / 2;
+
+        Collider2D[] colliders = Physics2D.OverlapCircleAll(transform.position, radius, _enemy);
+
+        if (colliders.Length > 0)
+            _closestTarget = colliders[Random.Range(0, colliders.Length)].transform;
+
     }
 
     private void Awake()

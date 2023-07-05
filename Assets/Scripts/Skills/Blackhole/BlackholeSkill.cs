@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class BlackholeSkill : Skill
@@ -15,6 +13,10 @@ public class BlackholeSkill : Skill
     [SerializeField] private float _growSpeed;
     [SerializeField] private float _shrinkSpeed;
     private BlackholeSkillController _currentBlackhole;
+    #endregion
+
+    #region Properties
+    public float MaxSize => _maxSize;
     #endregion
 
     public override bool CanUseSkill()
